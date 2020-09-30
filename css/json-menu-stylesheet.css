@@ -46,3 +46,23 @@
     color:var(--json-menu-text-muted);
     padding:0.5rem;
 }
+.json-item-flash {
+    background:linear-gradient(45deg, var(--json-menu-item), 70%, var(--json-menu-text-alert));
+    background-size:200% 200%;
+    border:0;
+    animation: json-menu-flash 1s ease infinite;
+}
+.json-text-success{
+    color:var(--json-menu-text-success)
+}
+.json-text-alert{
+    color:var(--json-menu-text-alert);
+}
+.json-text-warning{
+    color:var(--json-menu-text-warning);
+}
+@keyframes json-menu-flash {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}

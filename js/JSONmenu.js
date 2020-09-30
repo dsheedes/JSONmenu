@@ -21,7 +21,7 @@
         for(let i = 0; i < menu.body.length; i++){
 
             data += `
-                <li class='list-group-item json-item-header' data-toggle='${(menu.body[i].collapse)?"collapse":""}' href='#jsonItem${i}' role='button'>
+                <li class='json-list-item${i} list-group-item json-item-header' data-toggle='${(menu.body[i].collapse)?"collapse":""}' href='#jsonItem${i}' role='button'>
                     ${menu.body[i].header}
                 <div id='jsonItem${i}' class="json-item-body collapse ${(menu.body[i].collapse)?"":"show"}">
                     ${menu.body[i].body}
@@ -67,11 +67,11 @@
     }
     function has(item){
         for(let i = 0; i < menu.body.length; i++){
+            console.log(menu.body[i]);
             if(item.header && menu.body[i].header && item.header == menu.body[i].header){
+                console.log("sup")
                 if(item.body && menu.body[i].body && item.body == menu.body[i].body){
-                    if(item.footer && menu.body[i].footer && item.footer == menu.body[i].footer){
-                        return i;
-                    }
+                    return i;
                 }
             } else return -1;
         }
@@ -82,7 +82,20 @@
             draw();
         }
     }
-    $.fn.jsonMenu = function(action, items){
+    function alert(item, options){
+        let i = has(item);
+        if(i != -1){
+            item = $(".json-list-item"+i);
+            item.addClass("json-item-flash");
+            let previous = $(options.messageElement).html();
+            $(options.messageElement).html(options.message).addClass("json-text-alert");
+            setTimeout(() => {
+                item.removeClass("json-item-flash");
+                $(options.messageElement).html(previous).removeClass("json-text-alert");
+            }, options.timeout);
+        } else console.error("Alert unsuccessfull, cannot find item: ", item);
+    }
+    $.fn.jsonMenu = function(action, items, options){
         $(this).addClass("json-menu")
         if(action == "add"){
             if(!items.header)
@@ -91,7 +104,6 @@
                 console.error("This item doesn't have a body, collapsing will not work. "+items);
             menu.body.push(items);
             draw($(this));
-            return this;
         } else if(action == "set"){
             if(!items.body){
                 console.error("This menu doesn't have a body.") 
@@ -101,18 +113,28 @@
                 menu = items;
                 draw($(this));
             }
-            return this;
+
         } else if(action == "remove"){
             remove(items);
         } else if(action == "clear"){
             menu = null;
             draw();
         } else if(action == "show"){
-            show(options.speed)
+            show(options.speed);
         } else if(action == "hide"){
             hide(options.speed);
-        }else {
-            return this;
+        } else if(action == "alert"){
+            if(!items){
+                console.error("You need to send the alert item!");
+            } else{
+                if(!options){
+                    console.error("You need to send alert message options first!");
+                } else {
+                    alert(items, options);
+                }
+            }
+
         }
+        return this;
     }
  })( jQuery );
