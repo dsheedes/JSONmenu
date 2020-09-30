@@ -1,15 +1,15 @@
 (function( $ ){
     let menu = {
-        "header":"",
-        "body":[{}]
+        header:"",
+        body:[{}],
+        footer:""
     }
     function draw(main){
         main.hide(200);
         main.html("");
-        let data = "";
+        let data = "<ul class='list-group json-menu-header'>";
         if(menu.header){
             data = `
-            <ul class='list-group json-menu-header'>
                 <li class='list-group-item json-menu-header'>
                     ${menu.header}
                 </li>`;
@@ -35,6 +35,13 @@
             data += `</div></li>`;
 
             if(i == menu.body.length - 1){
+                if(menu.footer){
+                    data += `
+                        <div class='json-menu-footer'>
+                            ${menu.footer}
+                        </div>
+                    `;
+                }
                 data += `</ul>`;
                 main.html(data);
                 main.show(200);
@@ -44,7 +51,7 @@
     }
     function show(speed){
         if(!speed)
-            speed = 300;
+            speed = 500;
         main.show(speed);
     }
     function hide(speed){
@@ -58,15 +65,21 @@
     function collapse(item){
 
     }
-    function equals(item){
+    function has(item){
         for(let i = 0; i < menu.body.length; i++){
             if(item.header && menu.body[i].header && item.header == menu.body[i].header){
                 if(item.body && menu.body[i].body && item.body == menu.body[i].body){
                     if(item.footer && menu.body[i].footer && item.footer == menu.body[i].footer){
-                        return true;
+                        return i;
                     }
                 }
-            } else return false;
+            } else return -1;
+        }
+    }
+    function remove(item){
+        if(has(item) != -1){
+            menu.body.splice(i, 1);
+            draw();
         }
     }
     $.fn.jsonMenu = function(action, items){
@@ -90,10 +103,15 @@
             }
             return this;
         } else if(action == "remove"){
-
+            remove(items);
         } else if(action == "clear"){
-
-        } else {
+            menu = null;
+            draw();
+        } else if(action == "show"){
+            show(options.speed)
+        } else if(action == "hide"){
+            hide(options.speed);
+        }else {
             return this;
         }
     }
