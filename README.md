@@ -1,2 +1,2 @@
 # JSONmenu
-jQuery + Bootstrap plugin allows you to create dynamic menus with ease
+jQuery + Bootstrap 4.5 plugin allows you to create dynamic menus with ease
